@@ -1,6 +1,7 @@
 var path = require('path');
 var fs = require('fs');
 var archive = require('../helpers/archive-helpers');
+var _ = require("underscore");
 
 exports.headers = headers = {
   "access-control-allow-origin": "*",
@@ -9,6 +10,18 @@ exports.headers = headers = {
   "access-control-max-age": 10, // Seconds.
   'Content-Type': "text/html"
 };
+
+exports.sendResponse = function(response, data, statusCode, customHeader){
+  statusCode = statusCode || 200;
+  //customHeader = customHeader || {};
+  headers = customHeader ? 
+              _.extend({}, this.headers, customHeader) :
+              this.headers
+  console.log(headers)
+  response.writeHead(statusCode, headers);
+  //console.log(response);
+  response.end(data);
+}
 
 exports.serveAssets = function(res, asset, callback) {
   // Write some code here that helps serve up your static files!
