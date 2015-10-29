@@ -48,7 +48,7 @@ exports.isUrlInList = function(urlToMatch) {
 };
 
 exports.addUrlToList = function(url) {
-  fs.appendFile(exports.paths.list, url, function (err) {
+  fs.appendFile(exports.paths.list, url+'\n', function (err) {
     if (err){
       throw err;
     }
@@ -56,24 +56,21 @@ exports.addUrlToList = function(url) {
   });
 };
 
-exports.readUrlArchived = function(callback, responder) {
+exports.readUrlArchived = function(callback) {
   //callback = callback || function(el) { return el; }
   console.log('here')
   fs.readdir(exports.paths.archivedSites, function(err, files){
     console.log(files)
     if(err){
       throw err
-    } else {
-      if( callback(files) ){
-        console.log('a')
-        responder()
-      }
-    }
+    }  
+    console.log('a')
+    callback(files);
   });
   
 }
 
-exports.isUrlArchived = function(urlToMatch, responder) {
+exports.isUrlArchived = function(urlToMatch, callback) {
   // var urls = exports.readUrlArchived();
   // console.log(urls)
   //var isFind = false;
@@ -86,7 +83,12 @@ exports.isUrlArchived = function(urlToMatch, responder) {
     });
   };
   console.log('sdjhsadfjkshkj')
-  exports.readUrlArchived(isArchived, responder)
+  
+  exports.readUrlArchived(function (array) {
+    var result = isArchived(array);
+    callback(result);
+  });
+
 };
 
 exports.downloadUrls = function(url, data) {

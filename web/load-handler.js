@@ -22,11 +22,11 @@ var fs = require("fs");
 var actions = {
   'GET': function(request, response){
     var parsedUrl = url.parse(request.url).pathname;
-    console.log(parsedUrl)
+    
     if( parsedUrl === '/' ){
       parsedUrl = '/index.html';
     }
-    console.log(__dirname)
+    
     var pathToLoad = __dirname + '/public' + parsedUrl;
     helper.serveAssets(response, pathToLoad);
     // console.log(pathToLoad);

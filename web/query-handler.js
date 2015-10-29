@@ -11,35 +11,34 @@ var actions = {
     console.log('hey')
    
 
-    var responder = function(){
-      console.log(archive.paths.archivedSites + '/' + query.url + ".txt")
-      fs.readFile(archive.paths.archivedSites + '/' + query.url + ".txt", function(err, data){
-        if(err){
-          throw err;
+    var responder = function(isFound){
+      if(isFound){
+        fs.readFile(archive.paths.archivedSites + '/' + query.url + ".txt", function(err, data){
+          if(err){
+            throw err;
+          }
+          console.log('yay')
+          var contentType = {
+            'Content-Type': 'text/plain' //mime.lookup(pathToLoad)
+          }
+          //console.log(response)
+          helper.sendResponse(response, data.toString(), 200, contentType);
+        });
+      } else {
+        // save the url in site.txt for later fetching
+
+        // redirect user to waiting page (loading.html)
+        archive.addUrlToList(query.url);
+        console.log('JHSAGHJSCGFHJGJHSDGJHGHJGJHCGJH')
+        
+        var newLocation = { 
+          'Location': '/loading.html' //mime.lookup(pathToLoad)
         }
-        console.log('yay')
-        var contentType = {
-        'Content-Type': 'text/plain' //mime.lookup(pathToLoad)
-        }
-        //console.log(response)
-        helper.sendResponse(response, data, 200, contentType);
-      });
+        helper.sendResponse(response, null, 302, newLocation);
+      }
     }
 
     archive.isUrlArchived(query.url, responder)    
-
-    // if(archive.isUrlArchived(query.url, callback)){
-    //   fs.readFile(archives.paths.archivedSites + '/' + query + ".txt", function(err, data){
-    //     if(err){
-    //       throw err;
-    //     }
-    //     var contentType = {
-    //     'Content-Type': mime.lookup(pathToLoad)
-    //     }
-    //     //console.log(response)
-    //     helper.sendResponse(response, data, 200, contentType);
-    //   });
-    // } else {
   },
   'OPTIONS': function(request, response){
     helper.sendResponse(response, null);
