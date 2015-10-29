@@ -12,17 +12,18 @@ var actions = {
    
 
     var responder = function(isFound){
+      console.log('-------------->' +isFound);
       if(isFound){
         fs.readFile(archive.paths.archivedSites + '/' + query.url + ".txt", function(err, data){
           if(err){
             throw err;
           }
           console.log('yay')
-          var contentType = {
-            'Content-Type': 'text/plain' //mime.lookup(pathToLoad)
-          }
+          // var contentType = {
+          //   'Content-Type': 'text/plain' //mime.lookup(pathToLoad)
+          // }
           //console.log(response)
-          helper.sendResponse(response, data.toString(), 200, contentType);
+          helper.sendResponse(response, data.toString(), 200);
         });
       } else {
         // save the url in site.txt for later fetching

@@ -11,6 +11,11 @@ exports.websiteToFetch = function(){
       //console.log(urls);
       var urlToFetch = _.difference(urls, files);
       console.log(urlToFetch);
+      _.each(urlToFetch, function(url){
+        if(url !== ''){
+          fetchWebsite(url);
+        }
+      })
     })
   });
   
@@ -27,6 +32,11 @@ exports.websiteToFetch = function(){
 };
 //websiteToFetch();
 var fetchWebsite = function(url){
+  var options = {
+    host: url,
+    path: '/'
+  }
+
   var websiteContent = '';
 
   var handler = function(response) {
@@ -36,17 +46,46 @@ var fetchWebsite = function(url){
     });
 
     response.on('end', function () {
-      console.log(websiteContent);
+      //console.log(websiteContent);
+
+      var headIndex = websiteContent.indexOf('<head>')+6;
+      websiteContent = websiteContent.slice(0,headIndex) + 
+            '<base href="http://www.amazon.com/"><link rel="icon" href="data:;base64,=">' + 
+            websiteContent.slice(headIndex)
+      //console.log(websiteContent)
+
+      archive.downloadUrls(url, websiteContent);
     });
   }
   
-  http.request(url, handler).end();
+  http.get(options, handler).end();
 
-  return websiteContent
+  //return websiteContent
 }
 
+// return http.get({
+//         host: 'personatestuser.org',
+//         path: '/email'
+//     }, function(response) {
+//         // Continuously update stream with data
+//         var body = '';
+//         response.on('data', function(d) {
+//             body += d;
+//         });
+//         response.on('end', function() {
 
-// _.each(websiteToFetch(), function(url){
+//             // Data reception is done, do whatever with it!
+//             var parsed = JSON.parse(body);
+//             callback({
+//                 email: parsed.email,
+//                 password: parsed.pass
+//             });
+//         });
+//     });
+
+
+
+// _.each(exports.websiteToFetch(), function(url){
 //   var website = fetchWebsite(url);
 //   archives.downloadUrls(url, website);
 // })

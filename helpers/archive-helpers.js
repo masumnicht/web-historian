@@ -39,23 +39,36 @@ exports.readListOfUrls = function(callback) {
 
 };
 
-exports.isUrlInList = function(urlToMatch) {
-  var urls = readListOfUrls();
-  return _.some(urls, function(url){
-    if(url === urlToMatch){
-      return true;
-    };
+exports.isUrlInList = function(urlToMatch, arrayOfUrls) {
+  //var urls = exports.readListOfUrls();
+  return _.some(arrayOfUrls, function(url){
+    return url === urlToMatch;
   });
 
 };
 
 exports.addUrlToList = function(url) {
-  fs.appendFile(exports.paths.list, url+'\n', function (err) {
-    if (err){
-      throw err;
+  url = url.trim();
+
+  exports.readListOfUrls(function(arrayOfUrls){
+    //inside here we have access to arrayofurls
+    var isInList = exports.isUrlInList(url, arrayOfUrls);
+    if(url !== '' && !isInList){
+      url = url+'\n';
+      fs.appendFile(exports.paths.list, url, function (err) {
+        if (err){
+          throw err;
+        }
+        console.log('The "data to append" was appended to file!');
+      });
     }
-    console.log('The "data to append" was appended to file!');
-  });
+  })
+
+
+  // if(url !== '' && !_.contains(arrayOfUrls, url))
+
+
+
 };
 
 exports.readUrlArchived = function(callback) {
@@ -99,7 +112,7 @@ exports.isUrlArchived = function(urlToMatch, callback) {
 };
 
 exports.downloadUrls = function(url, data) {
-  fs.writeFile(url+'.txt', data, function(err){
+  fs.writeFile(exports.paths.archivedSites+'/'+url+'.txt', data, function(err){
     if(err){
       throw err
     }
