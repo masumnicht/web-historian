@@ -4,6 +4,7 @@
   "main": "web/basic-server.js",
   "license": "Copyright 2014, Hack Reactor. All rights reserved.",
   "dependencies": {
+    "cron": "^1.0.9",
     "mime": "^1.3.4",
     "query-string": "^3.0.0"
   },

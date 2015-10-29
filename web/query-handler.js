@@ -29,7 +29,7 @@ var actions = {
 
         // redirect user to waiting page (loading.html)
         archive.addUrlToList(query.url);
-        console.log('JHSAGHJSCGFHJGJHSDGJHGHJGJHCGJH')
+        //console.log('JHSAGHJSCGFHJGJHSDGJHGHJGJHCGJH')
         
         var newLocation = { 
           'Location': '/loading.html' //mime.lookup(pathToLoad)

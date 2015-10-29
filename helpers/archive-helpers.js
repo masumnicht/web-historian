@@ -30,9 +30,11 @@ exports.readListOfUrls = function(callback) {
   fs.readFile(exports.paths.list, function(err, data){
     if(err){
       throw err
-    } else {
-      return callback(data.toString().split(/\r\n|\r|\n/g))
     }
+    //console.log(data.toString().split(/\r\n|\r|\n/g))
+    // var data = data.toString().split(/\r\n|\r|\n/g);
+    //console.log('...',data);
+    callback(data.toString().split(/\r\n|\r|\n/g))
   })
 
 };
@@ -65,6 +67,11 @@ exports.readUrlArchived = function(callback) {
       throw err
     }  
     console.log('a')
+    
+    files = _.map(files, function(url){
+      return path.basename(url, '.txt');
+    });
+
     callback(files);
   });
   
@@ -77,7 +84,7 @@ exports.isUrlArchived = function(urlToMatch, callback) {
 
   var isArchived = function(urls){
     return _.some(urls, function(url){
-      url = path.basename(url, '.txt');
+      //url = path.basename(url, '.txt');
       console.log(url)
       return url === urlToMatch;
     });

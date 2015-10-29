@@ -1,15 +1,31 @@
 var http = require('http');
-var archive = require('../web/archive-helpers')
+var archive = require('../helpers/archive-helpers.js');
+var _ = require("underscore");
 
 
-var websiteToFetch = function(){
-  var urls = archive.readListOfUrls();
-  var archivedUrls = _.map(archive.readUrlArchived(), function(el){
-    return el.replace('.txt', '');
+
+exports.websiteToFetch = function(){
+  archive.readListOfUrls(function(urls){
+    console.log('here', urls)
+    archive.readUrlArchived(function(files){
+      //console.log(urls);
+      var urlToFetch = _.difference(urls, files);
+      console.log(urlToFetch);
+    })
   });
-  return _.difference(urls, archivedUrls);
-};
+  
+  
 
+
+
+
+
+  // var archivedUrls = _.map(archive.readUrlArchived(), function(el){
+  //   return el.replace('.txt', '');
+  // });
+  // return _.difference(urls, archivedUrls);
+};
+//websiteToFetch();
 var fetchWebsite = function(url){
   var websiteContent = '';
 
@@ -30,7 +46,9 @@ var fetchWebsite = function(url){
 }
 
 
-_.each(websiteToFetch(), function(url){
-  var website = fetchWebsite(url);
-  archives.downloadUrls(url, website);
-})
+// _.each(websiteToFetch(), function(url){
+//   var website = fetchWebsite(url);
+//   archives.downloadUrls(url, website);
+// })
+
+

@@ -1,8 +1,10 @@
 var http = require("http");
 var loader = require("./load-handler");
 var query = require("./query-handler");
+var fetcher = require("../workers/htmlfetcher.js")
 var initialize = require("./initialize.js");
 var url = require("url");
+var cron = require('cron');
 
 initialize("./archives");
 
@@ -11,6 +13,12 @@ var routes = {
   'query': query.handleRequest
 }
 
+
+var cronJob = cron.job("*/5 * * * * *", function(){
+    // perform operation e.g. GET request http.get() etc.
+    fetcher.websiteToFetch()
+}); 
+cronJob.start();
 
 
 var port = 8080;
