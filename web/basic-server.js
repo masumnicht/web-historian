@@ -4,7 +4,7 @@ var query = require("./query-handler");
 var initialize = require("./initialize.js");
 var url = require("url");
 
-//initialize("./archives");
+initialize("./archives");
 
 var routes = {
   '/': loader.handleRequest,
@@ -38,3 +38,4 @@ if (module.parent) {
   console.log("Listening on http://" + ip + ":" + port);
 }
 
+ 

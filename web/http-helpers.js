@@ -2,6 +2,8 @@ var path = require('path');
 var fs = require('fs');
 var archive = require('../helpers/archive-helpers');
 var _ = require("underscore");
+var mime = require("mime");
+
 
 exports.headers = headers = {
   "access-control-allow-origin": "*",
@@ -23,14 +25,15 @@ exports.sendResponse = function(response, data, statusCode, customHeader){
   response.end(data);
 }
 
-exports.serveAssets = function(res, asset, callback) {
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...),
-  // css, or anything that doesn't change often.)
+exports.serveAssets = function(response, pathToLoad, callback) {
+  fs.readFile(pathToLoad, function (error, file){
+    if( error ){
+      throw error;
+    }
+    var contentType = {
+      'Content-Type': mime.lookup(pathToLoad)
+    }
+    //console.log(response)
+    exports.sendResponse(response, file, 200, contentType);  
+  });
 };
-
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...),
-  // css, or anything that doesn't change often.)
-
-// As you progress, keep thinking about what helper functions you can put here!

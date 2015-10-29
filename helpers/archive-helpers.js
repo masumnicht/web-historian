@@ -25,17 +25,75 @@ exports.initialize = function(pathsObj) {
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function() {
+exports.readListOfUrls = function(callback) {
+  callback = callback || function(el) {return el}
+  fs.readFile(exports.paths.list, function(err, data){
+    if(err){
+      throw err
+    } else {
+      return callback(data.toString().split(/\r\n|\r|\n/g))
+    }
+  })
+
 };
 
-exports.isUrlInList = function() {
+exports.isUrlInList = function(urlToMatch) {
+  var urls = readListOfUrls();
+  return _.some(urls, function(url){
+    if(url === urlToMatch){
+      return true;
+    };
+  });
+
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(url) {
+  fs.appendFile(exports.paths.list, url, function (err) {
+    if (err){
+      throw err;
+    }
+    console.log('The "data to append" was appended to file!');
+  });
 };
 
-exports.isUrlArchived = function() {
+exports.readUrlArchived = function(callback, responder) {
+  //callback = callback || function(el) { return el; }
+  console.log('here')
+  fs.readdir(exports.paths.archivedSites, function(err, files){
+    console.log(files)
+    if(err){
+      throw err
+    } else {
+      if( callback(files) ){
+        console.log('a')
+        responder()
+      }
+    }
+  });
+  
+}
+
+exports.isUrlArchived = function(urlToMatch, responder) {
+  // var urls = exports.readUrlArchived();
+  // console.log(urls)
+  //var isFind = false;
+
+  var isArchived = function(urls){
+    return _.some(urls, function(url){
+      url = path.basename(url, '.txt');
+      console.log(url)
+      return url === urlToMatch;
+    });
+  };
+  console.log('sdjhsadfjkshkj')
+  exports.readUrlArchived(isArchived, responder)
 };
 
-exports.downloadUrls = function() {
+exports.downloadUrls = function(url, data) {
+  fs.writeFile(url+'.txt', data, function(err){
+    if(err){
+      throw err
+    }
+    console.log('file created!');
+  });
 };
