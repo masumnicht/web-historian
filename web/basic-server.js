@@ -1,43 +1,36 @@
-var http = require("http");
-var loader = require("./load-handler");
-var query = require("./query-handler");
-var fetcher = require("../workers/htmlfetcher.js")
+var http       = require("http");
+var loader     = require("./load-handler");
+var query      = require("./query-handler");
+var fetcher    = require("../workers/htmlfetcher.js")
 var initialize = require("./initialize.js");
-var url = require("url");
-var cron = require('cron');
+var url        = require("url");
+var cron       = require('cron');
 
 initialize("./archives");
 
 var routes = {
   '/': loader.handleRequest,
   'query': query.handleRequest
-}
-
+};
 
 var cronJob = cron.job("*/5 * * * * *", function(){
-    // perform operation e.g. GET request http.get() etc.
-    fetcher.websiteToFetch()
+  fetcher.websiteToFetch();
 }); 
 cronJob.start();
-
 
 var port = 8080;
 var ip = "127.0.0.1";
 var server = http.createServer(function(req, resp){
-  console.log(req.url);
+
   var parsedUrl = url.parse(req.url);
   var route = routes[parsedUrl.pathname];
 
-  if( parsedUrl.query) {
-    route = routes['query'];
-  }
+  route = parsedUrl.query ? routes['query'] : route;
   if( route ){
     route(req, resp);
   } else {
-    // 404, for the time being we call the same handler
     loader.handleRequest(req, resp);
   } 
-
 });
 
 if (module.parent) {

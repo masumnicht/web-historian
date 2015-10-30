@@ -1,23 +1,7 @@
-//var path = require('path');
 var archive = require('../helpers/archive-helpers');
-var helper = require('./http-helpers');
-var url = require("url");
-// var _ = require("underscore");
-var fs = require("fs");
-//var mime = require("mime");
-
-
-// var sendResponse = function(response, data, statusCode, customHeader){
-//   statusCode = statusCode || 200;
-//   //customHeader = customHeader || {};
-//   headers = customHeader ? 
-//               _.extend({}, helper.headers, customHeader) :
-//               helper.headers
-//   console.log(headers)
-//   response.writeHead(statusCode, headers);
-//   //console.log(response);
-//   response.end(data);
-// }
+var helper  = require('./http-helpers');
+var url     = require("url");
+var fs      = require("fs");
 
 var actions = {
   'GET': function(request, response){
@@ -26,20 +10,9 @@ var actions = {
     if( parsedUrl === '/' ){
       parsedUrl = '/index.html';
     }
-    
     var pathToLoad = __dirname + '/public' + parsedUrl;
+
     helper.serveAssets(response, pathToLoad);
-    // console.log(pathToLoad);
-    // fs.readFile(pathToLoad, function (error, file){
-    //   if( error ){
-    //     throw error;
-    //   }
-    //   var contentType = {
-    //     'Content-Type': mime.lookup(pathToLoad)
-    //   }
-    //   //console.log(response)
-    //   helper.sendResponse(response, file, 200, contentType);
-    //});
   },
   'OPTIONS': function(request, response){
     helper.sendResponse(response, null);
@@ -47,8 +20,6 @@ var actions = {
 };
 
 exports.handleRequest = function (req, res) {
-  var action = actions[req.method]
-  //console.log(req.method)
-  action(req, res)
+  var action = actions[req.method];
+  action(req, res);
 };
-
